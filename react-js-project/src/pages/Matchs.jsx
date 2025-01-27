@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext"
-import { Match } from "../components/MatchInfos";
+import { Match } from "../components/Match";
 
 export function Matchs() {
     const { matchs, id } = useUser();
@@ -22,7 +22,11 @@ export function Matchs() {
         <div style={{ display: "flex", flexDirection: "column" }}>
             {matchs.map(match => {
                 const otherPlayer = match?.user1?._id !== id ? match?.user1?.username : match?.user2?.username
-                return <button onClick={() => setMatch(match)}>Joueur: {otherPlayer || "Pas encore trouvé"} Tour: {match.turns.length}</button>
+                const winner = match.winner?.username
+                return <button onClick={() => setMatch(match)}>
+                    {winner ? winner + " a gagné la partie !" : (otherPlayer || "Pas encore trouvé") + " tour: " + (match.turns.length + 1)}
+
+                </button>
             }
             )}</div>
         {match && <Match matchId={match._id} />}

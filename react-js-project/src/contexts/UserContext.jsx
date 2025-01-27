@@ -80,8 +80,14 @@ export function UserProvider({ children }) {
             .catch(() => setError("Vous avez déjà un match en attente"));
     }
 
+    function makeMove(move, idMatch, idTurn) {
+        postJson(`http://localhost:3002/matches/${idMatch}/turns/${idTurn}`, { move: move }, { "Authorization": token })
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
+    }
+
     return (
-        <UserContext.Provider value={{ token, login, register, logout, matchs, joinMatch, username, id, getMatch }}>
+        <UserContext.Provider value={{ token, login, register, logout, matchs, joinMatch, username, id, getMatch, makeMove }}>
             {children}
         </UserContext.Provider>
     );
