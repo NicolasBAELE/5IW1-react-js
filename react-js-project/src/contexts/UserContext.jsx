@@ -1,11 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getJson, postJson } from '../utils/fetch';
+import { useGlobalNavigate } from './NavigationProvider';
+import { decodeJWT } from '../utils/decodeJWT';
 
 const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
     const [token, setToken] = useState(null);
-    const [matches, setMatches] = useState([])
+    const [matchs, setMatchs] = useState([])
+    const [username, setUsername] = useState("")
+    const [id, setId] = useState("")
+    const { navigate } = useGlobalNavigate();
 
 
     useEffect(() => {
@@ -24,13 +29,19 @@ export function UserProvider({ children }) {
     function login(username, password, setError) {
         setError("")
         postJson('http://localhost:3002/login', { username: username, password: password })
-            .then((res) => setToken("Bearer " + res?.token))
+            .then((res) => {
+                setToken("Bearer " + res.token)
+                const jwt = decodeJWT(res.token)
+                setUsername(jwt.username)
+                setId(jwt._id)
+                navigate("/user")
+            })
             .catch(() => setError("L'identifiant ou le mot de passe est incorrecte"))
     };
 
     function logout() {
         setToken("")
-        setMatches([])
+        setMatchs([])
     };
 
     function register(username, password, setError) {
@@ -40,21 +51,37 @@ export function UserProvider({ children }) {
             .catch((e) => setError(errorMapping(e.data.error)))
     };
 
-    function getMatches() {
-        getJson('http://localhost:3002/matches', { "Authorization": token })
-            .then((res) => setMatches(res))
-            .catch(() => console.log("Veuilliez vous connecter"))
+    async function getMatches() {
+        try {
+            const res = await getJson('http://localhost:3002/matches', { "Authorization": token });
+            setMatchs(res);
+            return res;
+        } catch {
+            return console.log("Veuilliez vous connecter");
+        }
+    };
+
+    async function getMatch(matchId) {
+        try {
+            const res = await getJson(`http://localhost:3002/matches/${matchId}`, { "Authorization": token });
+            return res;
+        } catch {
+            return console.log("Veuilliez vous connecter");
+        }
     };
 
     function joinMatch(setError) {
-        setError("")
+        setError("");
         postJson('http://localhost:3002/matches', {}, { "Authorization": token })
-            .then(() => getMatches())
-            .catch(() => setError("Vous avez déjà un match en attente"))
-    };
+            .then(() => {
+                return getMatches();
+            })
+            .then((res) => navigate(`/matchs?id=${res.at(-1)?._id}`))
+            .catch(() => setError("Vous avez déjà un match en attente"));
+    }
 
     return (
-        <UserContext.Provider value={{ token, login, register, logout, matches, joinMatch }}>
+        <UserContext.Provider value={{ token, login, register, logout, matchs, joinMatch, username, id, getMatch }}>
             {children}
         </UserContext.Provider>
     );
