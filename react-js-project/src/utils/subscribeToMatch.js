@@ -13,9 +13,6 @@ function subscribeToMatch(matchId, token, setEvents) {
         try {
             const dataParsed = JSON.parse(event.data);
             const data = Array.isArray(dataParsed) ? dataParsed : [dataParsed];
-            console.log(data);
-            
-
             setEvents((prevEvents) => [...prevEvents, ...data]);
         } catch (error) {
             console.error("Erreur lors du traitement de l'événement :", error);
