@@ -18,14 +18,15 @@ export function Matchs() {
         }
     }, [matchs]);
 
+
     return <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
             {matchs.map(match => {
                 const otherPlayer = match?.user1?._id !== id ? match?.user1?.username : match?.user2?.username
                 const winner = match.winner?.username
+                const draw = match.hasOwnProperty("winner")
                 return <button onClick={() => setMatch(match)}>
-                    {winner ? winner + " a gagné la partie !" : (otherPlayer || "Pas encore trouvé") + " tour: " + (match.turns.length + 1)}
-
+                    {winner ? winner + " a gagné la partie !" : draw ? "Egalité avec " + otherPlayer : (otherPlayer || "Pas encore trouvé")}
                 </button>
             }
             )}</div>
