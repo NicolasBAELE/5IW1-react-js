@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useUser } from "../contexts/UserContext.jsx";
+import { Input } from "./Input.jsx";
+import { Button } from "./Button.jsx";
 
 export function RegisterBox() {
     const { register } = useUser();
@@ -30,28 +32,39 @@ export function RegisterBox() {
     }
 
     return (
-        <div>
-            <input
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+            backgroundColor: "#fff",
+            borderRadius: "8px",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
+            maxWidth: "400px",
+            width: "100%",
+            margin: "0 auto",
+        }}>
+            <Input
                 placeholder="Nom d'utilisateur"
                 value={username}
                 onChange={(e) => handleUsernameChange(e.target.value)}
             />
-            <input
+            <Input
                 type="password"
                 placeholder="Mot de passe"
                 value={password}
                 onChange={(e) => handlePasswordChange(e.target.value)}
             />
-            <input
+            <Input
                 type="password"
                 placeholder="Confirmation du mot de passe"
                 value={confirmPassword}
                 onChange={(e) => handleConfirmPasswordChange(e.target.value)}
             />
-            <button onClick={handleSubmit}>
+            <Button onClick={handleSubmit}>
                 Créer son compte
-            </button>
-            {errorMessage && <div>{errorMessage}</div>}
+            </Button>
         </div>
     );
 }

@@ -76,7 +76,7 @@ export function UserProvider({ children }) {
             .then(() => {
                 return getMatches();
             })
-            .then((res) => navigate(`/matchs?id=${res.at(-1)?._id}`))
+            .then((res) => navigate(`/matchs/${res.at(-1)?._id}`))
             .catch(() => setError("Vous avez déjà un match en attente"));
     }
 
@@ -87,7 +87,7 @@ export function UserProvider({ children }) {
     }
 
     return (
-        <UserContext.Provider value={{ token, login, register, logout, matchs, joinMatch, username, id, getMatch, makeMove }}>
+        <UserContext.Provider value={{ token, login, register, logout, matchs, joinMatch, username, id, getMatch, makeMove, getMatches }}>
             {children}
         </UserContext.Provider>
     );

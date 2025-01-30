@@ -6,6 +6,7 @@ import { Matchs } from "./pages/Matchs";
 import { NavigationProvider } from "./contexts/NavigationProvider";
 import { UserProvider } from './contexts/UserContext'
 import RouteProtection from "./components/RouteProtection";
+import { Match } from "./components/Match";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
             <Route path="/" element={<Login />} />
             <Route path="/user" element={<RouteProtection><User /></RouteProtection>} />
             <Route path="/matchs" element={<RouteProtection><Matchs /></RouteProtection>} />
+            <Route path="/matchs/:id" element={<RouteProtection><Match /></RouteProtection>} />
           </Routes>
         </UserProvider>
       </NavigationProvider>

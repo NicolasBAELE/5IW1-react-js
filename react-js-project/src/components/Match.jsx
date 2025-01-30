@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import subscribeToMatch from "../utils/subscribeToMatch";
+import { useParams } from "react-router-dom";
+import { Button } from "./Button";
 
-export function Match({ matchId }) {
+export function Match() {
+    const { id: matchId } = useParams();
     const { token, getMatch, id, makeMove } = useUser();
     const [events, setEvents] = useState([]);
     const [match, setMatch] = useState({});
     const [otherPlayer, setOtherPlayer] = useState({});
     const [idTurn, setIdTurn] = useState(1);
     const [lastMove, setLastMove] = useState("");
-    const [matchInLive, setMatchInLive] = useState(!match.hasOwnProperty("winner"));
+    const [matchInLive, setMatchInLive] = useState(!match?.hasOwnProperty("winner"));
 
     const fetchMatch = async () => {
-        const matchData = await getMatch(matchId);
-        setMatch(matchData);
+        if (matchId) {
+            const matchData = await getMatch(matchId);
+            setMatch(matchData);
+        }
     };
 
     useEffect(() => {
@@ -27,7 +32,8 @@ export function Match({ matchId }) {
                     ? { username: match?.user1?.username, user: "user1" }
                     : { username: match?.user2?.username, user: "user2" }
             );
-            setMatchInLive(!match.hasOwnProperty("winner"));
+            setMatchInLive(!match?.hasOwnProperty("winner"));
+            setLastMove(match.turns?.at(-1)?.winner ? "" : String(lastMove || match.turns?.at(-1)?.user1 || match.turns?.at(-1)?.user2).replace(/\?+$/, "").replace(/undefined+$/, ""))
         }
     }, [match]);
 
@@ -43,6 +49,7 @@ export function Match({ matchId }) {
     useEffect(() => {
         setEvents([]);
         setIdTurn(1);
+        setLastMove("")
     }, [matchId]);
 
     useEffect(() => {
@@ -70,8 +77,6 @@ export function Match({ matchId }) {
     function eventMapping(event) {
         if (event.type === "PLAYER1_JOIN" || event.type === "PLAYER2_JOIN") {
             return `${event.payload.user} a rejoint la partie`;
-        } else if (event.type === "NEW_TURN") {
-            return `Tour ${event.payload.turnId}`;
         } else if (event.type === "TURN_ENDED") {
             const winner = event.payload.winner;
             if (winner === "draw") {
@@ -108,11 +113,11 @@ export function Match({ matchId }) {
                 alignItems: "center",
                 height: "100vh",
                 width: "100%",
-                background: "linear-gradient(to right, #6a11cb, #2575fc)",
-                color: "white",
+                color: "#333",
                 fontFamily: "Arial, sans-serif",
                 textAlign: "center",
                 padding: "20px",
+                backgroundColor: "#f4f4f4",
             }}
         >
             {!matchInLive && (
@@ -136,77 +141,48 @@ export function Match({ matchId }) {
                     Attente du deuxième joueur...
                 </div>
             )}
-            <div
-                style={{
-                    maxWidth: "500px",
-                    width: "100%",
-                    background: "rgba(255, 255, 255, 0.2)",
-                    padding: "10px",
-                    borderRadius: "10px",
-                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-                    marginBottom: "20px",
-                }}
-            >
-                {matchInLive &&
-                    events.map((event, key) => (
+            {matchInLive && events.length !== 0 &&
+                <div
+                    style={{
+                        maxWidth: "500px",
+                        width: "100%",
+                        padding: "10px",
+                        borderRadius: "10px",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                        backgroundColor: "#f4f4f4",
+                        marginBottom: "20px",
+                    }}
+                >
+                    {events.map((event, key) => (
                         <div key={`${event.type}-${event.matchId}-${key}`} style={{ margin: "5px 0" }}>
                             {eventMapping(event)}
                         </div>
                     ))}
-            </div>
-            {matchInLive && match && (
+                </div>
+            }
+            {matchInLive && match && match.user2 && (
                 <div style={{ display: "flex", gap: "10px" }}>
-                    <button
+                    <Button
                         onClick={() => handleMove("rock")}
                         disabled={lastMove}
-                        style={{
-                            padding: "10px 20px",
-                            fontSize: "1rem",
-                            fontWeight: "bold",
-                            borderRadius: "5px",
-                            border: "none",
-                            background: lastMove ? "#bdc3c7" : "#ff5f6d",
-                            color: "white",
-                            cursor: lastMove ? "not-allowed" : "pointer",
-                            transition: "0.3s",
-                        }}
+                        type={"primary"}
                     >
                         Pierre
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={() => handleMove("paper")}
                         disabled={lastMove}
-                        style={{
-                            padding: "10px 20px",
-                            fontSize: "1rem",
-                            fontWeight: "bold",
-                            borderRadius: "5px",
-                            border: "none",
-                            background: lastMove ? "#bdc3c7" : "#2ecc71",
-                            color: "white",
-                            cursor: lastMove ? "not-allowed" : "pointer",
-                            transition: "0.3s",
-                        }}
+                        type={"secondary"}
                     >
                         Papier
-                    </button>
-                    <button
+                    </Button>
+                    <Button
                         onClick={() => handleMove("scissors")}
                         disabled={lastMove}
-                        style={{
-                            padding: "10px 20px",
-                            fontSize: "1rem",
-                            fontWeight: "bold",
-                            borderRadius: "5px",
-                            border: "none",
-                            background: lastMove ? "#bdc3c7" : "#f39c12",
-                            color: "white",
-                            cursor: lastMove ? "not-allowed" : "pointer",
-                            transition: "0.3s",
-                        }}
+                        type={"tertiary"}
                     >
                         Ciseaux
-                    </button>
+                    </Button>
                 </div>
             )}
         </div>

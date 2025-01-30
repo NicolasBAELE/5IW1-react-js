@@ -23,9 +23,10 @@ function subscribeToMatch(matchId, token, setEvents) {
         };
 
         eventSource.onerror = (error) => {
+            setEvents([])
             console.error("Erreur de connexion SSE, tentative de reconnexion...", error);
             eventSource.close();
-            setTimeout(connect, 1000); 
+            connect(); 
         };
     };
 
