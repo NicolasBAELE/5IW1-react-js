@@ -33,7 +33,6 @@ export function Match() {
                     : { username: match?.user2?.username, user: "user2" }
             );
             setMatchInLive(!match?.hasOwnProperty("winner"));
-            setLastMove(match.turns?.at(-1)?.winner ? "" : String(lastMove || match.turns?.at(-1)?.user1 || match.turns?.at(-1)?.user2).replace(/\?+$/, "").replace(/undefined+$/, ""))
         }
     }, [match]);
 
@@ -70,13 +69,26 @@ export function Match() {
         }
     }, [events]);
 
-    function toFrench(move) {
-        return move === "scissors" ? "ciseaux" : move === "paper" ? "papier" : "pierre";
+    function getMoveImg(move = lastMove, reversed = false) {
+        console.log({ move });
+
+        return move === "scissors"
+            ? <img src="/leg_kick.jpg" style={reversed ? { transform: "scaleX(-1)" } : {}} />
+            : move === "paper"
+                ? <img src="/multiple_punchs.jpg" style={reversed ? { transform: "scaleX(-1)" } : {}} />
+                : <img src="/punch.jpg" style={reversed ? { transform: "scaleX(-1)" } : {}} />;
     }
+    console.log(lastMove);
+
 
     function eventMapping(event) {
         if (event.type === "PLAYER1_JOIN" || event.type === "PLAYER2_JOIN") {
-            return `${event.payload.user} a rejoint la partie`;
+            if (event.payload.user === otherPlayer.username) {
+                return (<><img src="/idle.jpg" style={{ transform: "scaleX(-1)" }} alt="Idle" /> {otherPlayer.username}</>);
+            } else {
+                return (<>Vous <img src="/idle.jpg" alt="Idle" /></>);
+            }
+
         } else if (event.type === "TURN_ENDED") {
             const winner = event.payload.winner;
             if (winner === "draw") {
@@ -86,15 +98,15 @@ export function Match() {
                 return otherPlayer.username + " a gagné la manche";
             }
             return "Vous avez gagné la manche";
-        } else if (
-            events.at(-1)?.type.includes("_MOVED") &&
-            event.payload.turn === idTurn &&
-            (event.type === "PLAYER1_MOVED" || event.type === "PLAYER2_MOVED")
-        ) {
+        } else if (event.type === "PLAYER1_MOVED" || event.type === "PLAYER2_MOVED") {
             if (otherPlayer.user === (event.type === "PLAYER1_MOVED" ? "user1" : "user2")) {
-                return "On attend plus que toi !";
+                if (events.at(-1)?.type.includes("_MOVED") && event.payload.turn === idTurn) {
+                    return "On attend plus que toi !";
+                } else {
+                    return getMoveImg(match?.turns[event.payload?.turn - 1]?.[otherPlayer?.user], true)
+                }
             } else {
-                return "Tu as joué " + toFrench(lastMove);
+                return getMoveImg(match?.turns[event.payload?.turn - 1]?.[otherPlayer?.user === "user1" ? "user2" : "user1"])
             }
         }
     }
@@ -111,7 +123,6 @@ export function Match() {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100vh",
                 width: "100%",
                 color: "#333",
                 fontFamily: "Arial, sans-serif",
@@ -131,12 +142,12 @@ export function Match() {
                     Le match est terminé {match.winner?.username ? `et ${match.winner?.username} a gagné !` : "sur une égalité"}
                 </div>
             )}
-            {matchInLive && otherPlayer && (
+            {matchInLive && otherPlayer.username && (
                 <div style={{ fontSize: "1.5rem", fontWeight: "bold", marginBottom: "20px" }}>
                     Match contre {otherPlayer.username}
                 </div>
             )}
-            {matchInLive && !otherPlayer && (
+            {matchInLive && !otherPlayer.username && (
                 <div style={{ fontSize: "1.2rem", marginBottom: "20px" }}>
                     Attente du deuxième joueur...
                 </div>
@@ -167,21 +178,21 @@ export function Match() {
                         disabled={lastMove}
                         type={"primary"}
                     >
-                        Pierre
+                        <img src="/punch.jpg" style={{ pointerEvents: "none" }} />
                     </Button>
                     <Button
                         onClick={() => handleMove("paper")}
                         disabled={lastMove}
                         type={"secondary"}
                     >
-                        Papier
+                        <img src="/multiple_punchs.jpg" style={{ pointerEvents: "none" }} />
                     </Button>
                     <Button
                         onClick={() => handleMove("scissors")}
                         disabled={lastMove}
                         type={"tertiary"}
                     >
-                        Ciseaux
+                        <img src="/leg_kick.jpg" style={{ pointerEvents: "none" }} />
                     </Button>
                 </div>
             )}

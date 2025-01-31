@@ -15,7 +15,7 @@ export function Login() {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100vh",
+                height: "100%",
                 backgroundColor: "#f4f4f4",
                 padding: "20px",
             }}

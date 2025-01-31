@@ -5,9 +5,8 @@ export function Button({
     customStyles,
     disabled,
 }) {
-
-    const styles = {
-        padding: "10px 20px",
+    const baseStyles = {
+        padding: "10px",
         fontSize: "1rem",
         fontWeight: "bold",
         borderRadius: "5px",
@@ -20,21 +19,22 @@ export function Button({
                     ? "#f39c12"
                     : "#3498db",
         color: "white",
-        cursor: "pointer",
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.5 : 1,
         transition: "0.3s",
         width: "100%",
         maxWidth: "400px",
         textAlign: "center",
         ...customStyles,
-    }
+    };
 
-    return <button
-        disabled={disabled}
-        style={styles}
-        onClick={onClick}
-        onMouseOver={(e) => (e.target.style.opacity = "0.8")}
-        onMouseOut={(e) => (e.target.style.opacity = "1")}
-    >
-        {children}
-    </button>
+    return (
+        <button
+            disabled={disabled}
+            style={baseStyles}
+            onClick={onClick}
+        >
+            {children}
+        </button>
+    );
 }

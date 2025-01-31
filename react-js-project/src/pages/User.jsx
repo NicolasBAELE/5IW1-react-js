@@ -21,7 +21,7 @@ export function User() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                height: "100vh",
+                height: "100%",
                 textAlign: "center",
                 backgroundColor: "#f4f4f4",
             }}
