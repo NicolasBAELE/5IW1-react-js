@@ -18,7 +18,6 @@ export function Matchs() {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
-                width: "100%",
                 color: "#333",
                 textAlign: "center",
                 backgroundColor: "#f4f4f4",

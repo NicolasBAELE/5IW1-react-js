@@ -26,7 +26,7 @@ function subscribeToMatch(matchId, token, setEvents) {
             setEvents([])
             console.error("Erreur de connexion SSE, tentative de reconnexion...", error);
             eventSource.close();
-            connect(); 
+            connect();
         };
     };
 
