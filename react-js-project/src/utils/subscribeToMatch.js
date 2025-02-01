@@ -8,7 +8,7 @@ function subscribeToMatch(matchId, token, setEvents) {
     const connect = () => {
         eventSource = new EventSourcePolyfill(url, {
             headers: {
-                Authorization: token,
+                Authorization: "Bearer " + token,
             },
         });
 

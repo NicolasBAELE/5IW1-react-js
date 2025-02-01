@@ -6,9 +6,9 @@ import { decodeJWT } from '../utils/decodeJWT';
 const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
-    const [token, setToken] = useState(null);
+    const [token, setToken] = useState(localStorage.getItem("token"));
     const [matchs, setMatchs] = useState([])
-    const [username, setUsername] = useState("")
+    const [username, setUsername] = useState(localStorage.getItem("username"))
     const [id, setId] = useState("")
     const { navigate } = useGlobalNavigate();
 
@@ -30,9 +30,11 @@ export function UserProvider({ children }) {
         setError("")
         postJson('http://localhost:3002/login', { username: username, password: password })
             .then((res) => {
-                setToken("Bearer " + res.token)
+                setToken(res.token)
+                localStorage.setItem("token", res.token);
                 const jwt = decodeJWT(res.token)
                 setUsername(jwt.username)
+                localStorage.setItem("username", jwt.username);
                 setId(jwt._id)
                 navigate("/user")
             })
@@ -40,7 +42,10 @@ export function UserProvider({ children }) {
     };
 
     function logout() {
-        setToken("")
+        setToken(null)
+        setUsername(null);
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
         setMatchs([])
     };
 
@@ -53,7 +58,7 @@ export function UserProvider({ children }) {
 
     async function getMatches() {
         try {
-            const res = await getJson('http://localhost:3002/matches', { "Authorization": token });
+            const res = await getJson('http://localhost:3002/matches', { "Authorization": "Bearer " + token });
             setMatchs(res);
             return res;
         } catch {
@@ -63,7 +68,7 @@ export function UserProvider({ children }) {
 
     async function getMatch(matchId) {
         try {
-            const res = await getJson(`http://localhost:3002/matches/${matchId}`, { "Authorization": token });
+            const res = await getJson(`http://localhost:3002/matches/${matchId}`, { "Authorization": "Bearer " + token });
             return res;
         } catch {
             return console.log("Veuilliez vous connecter");
@@ -72,7 +77,7 @@ export function UserProvider({ children }) {
 
     function joinMatch(setError) {
         setError("");
-        postJson('http://localhost:3002/matches', {}, { "Authorization": token })
+        postJson('http://localhost:3002/matches', {}, { "Authorization": "Bearer " + token })
             .then(() => {
                 return getMatches();
             })
@@ -81,7 +86,7 @@ export function UserProvider({ children }) {
     }
 
     function makeMove(move, idMatch, idTurn) {
-        postJson(`http://localhost:3002/matches/${idMatch}/turns/${idTurn}`, { move: move }, { "Authorization": token })
+        postJson(`http://localhost:3002/matches/${idMatch}/turns/${idTurn}`, { move: move }, { "Authorization": "Bearer " + token })
             .then((res) => console.log(res))
             .catch((err) => console.log(err));
     }

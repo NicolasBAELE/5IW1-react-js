@@ -20,7 +20,7 @@ export function Login() {
                 padding: "20px",
             }}
         >
-            <h1 style={{ color: "#333", fontSize: "2rem", marginBottom: "20px" }}>
+            <h1 style={{ fontSize: "2rem", marginBottom: "20px" }}>
                 {registerMode ? "Inscription" : "Connexion"}
             </h1>
 

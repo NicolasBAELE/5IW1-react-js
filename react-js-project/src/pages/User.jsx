@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { useGlobalNavigate } from "../contexts/NavigationProvider";
 import { Button } from "../components/Button";
+import { theme } from "../utils/theme";
 
 export function User() {
     const [joinMatchError, setJoinMatchError] = useState("");
@@ -26,7 +27,7 @@ export function User() {
                 backgroundColor: "#f4f4f4",
             }}
         >
-            <h1 style={{ color: "#333", fontSize: "2rem", marginBottom: "20px" }}>
+            <h1 style={{ fontSize: "2rem", marginBottom: "20px" }}>
                 Bonjour {username} !
             </h1>
 
@@ -37,23 +38,27 @@ export function User() {
                 >
                     Se déconnecter
                 </Button>
-
                 <Button
                     onClick={() => joinMatch(setJoinMatchError)}
                     type={"primary"}
                 >
                     Rejoindre un match
                 </Button>
-
                 <Button
                     onClick={() => navigate("/matchs")}
+                    type={"tertiary"}
                 >
                     Mes matchs
+                </Button>
+                <Button
+                    onClick={() => navigate("/dashboard")}
+                >
+                    Dashboard
                 </Button>
             </div>
 
             {joinMatchError && (
-                <p style={{ color: "#e74c3c", marginTop: "10px" }}>{joinMatchError}</p>
+                <p style={{ color: theme.secondary, marginTop: "10px" }}>{joinMatchError}</p>
             )}
         </div>
     );

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { Button } from "./Button";
 import { Input } from "./Input";
+import { theme } from "../utils/theme";
 
 export function LoginBox() {
     const { login } = useUser();
@@ -54,7 +55,7 @@ export function LoginBox() {
             >
                 Se connecter
             </Button>
-            {errorMessage && <div style={{ color: "#e74c3c", marginTop: "10px", fontSize: "0.9rem" }}>{errorMessage}</div>}
+            {errorMessage && <div style={{ color: theme.secondary, marginTop: "10px", fontSize: "0.9rem" }}>{errorMessage}</div>}
         </div>
     );
 }

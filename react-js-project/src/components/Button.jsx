@@ -1,3 +1,5 @@
+import { theme } from "../utils/theme";
+
 export function Button({
     type = "default",
     children,
@@ -12,12 +14,12 @@ export function Button({
         borderRadius: "5px",
         border: "none",
         background: type === "primary"
-            ? "#2ecc71"
+            ? theme.primary
             : type === "secondary"
-                ? "#cf2500"
+                ? theme.secondary
                 : type === "tertiary"
-                    ? "#f39c12"
-                    : "#3498db",
+                    ? theme.tertiary
+                    : theme.default,
         color: "white",
         cursor: disabled ? "not-allowed" : "pointer",
         opacity: disabled ? 0.5 : 1,
