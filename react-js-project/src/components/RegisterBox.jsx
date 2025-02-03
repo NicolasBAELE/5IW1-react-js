@@ -65,6 +65,7 @@ export function RegisterBox() {
             <Button onClick={handleSubmit}>
                 Créer son compte
             </Button>
+            {errorMessage && <div>{errorMessage}</div>}
         </div>
     );
 }
