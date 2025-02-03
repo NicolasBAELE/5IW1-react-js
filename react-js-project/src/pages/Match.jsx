@@ -113,7 +113,7 @@ export function Match() {
             if (event.payload.user === otherPlayer.username) {
                 return (
                     <>
-                        <img src="/idle.jpg" style={{ transform: "scaleX(-1)" }} alt="Idle" />
+                        <img src="/idle.jpg" style={{ transform: "scaleX(-1)" }} />
                         <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                             {otherPlayer.username} a rejoint la partie !
                         </div>
@@ -125,7 +125,7 @@ export function Match() {
                         <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                             Vous avez rejoint la partie !
                         </div>
-                        <img src="/idle.jpg" alt="Idle" />
+                        <img src="/idle.jpg" />
                     </>
                 );
             }
@@ -177,7 +177,6 @@ export function Match() {
                     flexDirection: "column",
                     justifyContent: "center",
                     alignItems: "center",
-                    width: "100%",
                     fontFamily: "Arial, sans-serif",
                     textAlign: "center",
                     padding: "20px",
