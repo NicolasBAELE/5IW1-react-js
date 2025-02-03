@@ -184,6 +184,7 @@ export function Match() {
                     backgroundColor: "#f4f4f4",
                     fontSize: "1.5rem",
                     fontWeight: "bold",
+                    minHeight: "100vh",
                 }}
             >
                 {otherPlayer.username && (
@@ -218,11 +219,11 @@ export function Match() {
                         style={{
                             maxWidth: "500px",
                             width: "100%",
-                            padding: "10px",
                             borderRadius: "10px",
                             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                             backgroundColor: "#f4f4f4",
                             marginBottom: "20px",
+                            padding: "10px",
                         }}
                     >
                         {events.map((event, key) => {
@@ -242,7 +243,6 @@ export function Match() {
                                         justifyContent: event.type === "TURN_ENDED" ? "center" : isMe === true ? "flex-end" : "flex-start",
                                         alignItems: "center",
                                         width: "100%",
-                                        padding: "5px 10px"
                                     }}
                                 >
                                     {eventMapping(event)}

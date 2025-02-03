@@ -24,6 +24,8 @@ export function Matchs() {
                     textAlign: "center",
                     backgroundColor: "#f4f4f4",
                     padding: "20px",
+                    minHeight: "100vh",
+
                 }}
             >
                 <h1 style={{ marginBottom: "20px", fontSize: "2rem" }}>Liste des matchs</h1>
