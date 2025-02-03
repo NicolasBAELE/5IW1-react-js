@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { getJson, postJson } from '../utils/fetch';
 import { useGlobalNavigate } from './NavigationProvider';
 import { decodeJWT } from '../utils/decodeJWT';
+import { BASE_URL } from '../utils/theme';
 
 const UserContext = createContext(null);
 
@@ -31,7 +32,7 @@ export function UserProvider({ children }) {
 
     function login(username, password, setError) {
         setError("")
-        postJson('http://localhost:3002/login', { username: username, password: password })
+        postJson(BASE_URL + '/login', { username: username, password: password })
             .then((res) => {
                 setToken(res.token)
                 localStorage.setItem("token", res.token);
@@ -50,14 +51,14 @@ export function UserProvider({ children }) {
 
     function register(username, password, setError) {
         setError("")
-        postJson('http://localhost:3002/register', { username: username, password: password })
+        postJson(BASE_URL + '/register', { username: username, password: password })
             .then(() => login(username, password, setError))
             .catch((e) => setError(errorMapping(e.data.error)))
     };
 
     async function getMatches() {
         try {
-            const res = await getJson('http://localhost:3002/matches', { "Authorization": "Bearer " + token });
+            const res = await getJson(BASE_URL + '/matches', { "Authorization": "Bearer " + token });
             setMatchs(res);
             return res;
         } catch {
@@ -67,7 +68,7 @@ export function UserProvider({ children }) {
 
     async function getMatch(matchId) {
         try {
-            const res = await getJson(`http://localhost:3002/matches/${matchId}`, { "Authorization": "Bearer " + token });
+            const res = await getJson(`${BASE_URL}/matches/${matchId}`, { "Authorization": "Bearer " + token });
             return res;
         } catch {
             return console.log("Veuilliez vous connecter");
@@ -76,7 +77,7 @@ export function UserProvider({ children }) {
 
     function joinMatch(setError) {
         setError("");
-        postJson('http://localhost:3002/matches', {}, { "Authorization": "Bearer " + token })
+        postJson(BASE_URL + '/matches', {}, { "Authorization": "Bearer " + token })
             .then(() => {
                 return getMatches();
             })
@@ -85,7 +86,7 @@ export function UserProvider({ children }) {
     }
 
     function makeMove(move, idMatch, idTurn) {
-        postJson(`http://localhost:3002/matches/${idMatch}/turns/${idTurn}`, { move: move }, { "Authorization": "Bearer " + token })
+        postJson(`${BASE_URL}/matches/${idMatch}/turns/${idTurn}`, { move: move }, { "Authorization": "Bearer " + token })
             .then((res) => console.log(res))
             .catch((err) => console.log(err));
     }

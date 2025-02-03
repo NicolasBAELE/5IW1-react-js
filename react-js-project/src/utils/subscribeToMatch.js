@@ -1,7 +1,8 @@
 import { EventSourcePolyfill } from "event-source-polyfill";
+import { BASE_URL } from "./theme";
 
 function subscribeToMatch(matchId, token, setEvents) {
-    const url = `http://localhost:3002/matches/${matchId}/subscribe`;
+    const url = `${BASE_URL}/matches/${matchId}/subscribe`;
 
     let eventSource;
 

@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import { RegisterBox } from "../components/RegisterBox";
 import { LoginBox } from "../components/LoginBox";
 import { Button } from "../components/Button";
+import { useGlobalNavigate } from "../contexts/NavigationProvider";
 
 export function Login() {
     const [registerMode, setRegisterMode] = useState(false);
     const { token } = useUser();
+    const { navigate } = useGlobalNavigate()
+
+    useEffect(() => {
+        if (token) {
+            navigate("/user")
+        }
+    }, [])
 
     return (
         <div
