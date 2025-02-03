@@ -102,7 +102,12 @@ export function Match() {
 
     function eventMapping(event) {
         if (event.type === "MATCH_ENDED") {
-            return <div style={{ width: "100%" }}>{event.payload.winner} a gagné la partie !</div>
+            const winner = match.winner?.username;
+            const draw = match.hasOwnProperty("winner") && match.winner === null
+            if (winner)
+                return <div style={{ width: "100%" }}>{winner} a gagné la partie !</div>
+            if (draw)
+                return <div style={{ width: "100%" }}>Egalité !</div>
         }
         if (event.type === "PLAYER1_JOIN" || event.type === "PLAYER2_JOIN") {
             if (event.payload.user === otherPlayer.username) {
@@ -247,7 +252,7 @@ export function Match() {
                     </div>
                 }
 
-                {match && match.user2 && (
+                {!match.hasOwnProperty("winner") && match && match.user2 && (
                     <div style={{ display: "flex", gap: "10px" }}>
                         <Button
                             onClick={() => handleMove("rock")}

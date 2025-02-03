@@ -8,7 +8,7 @@ const UserContext = createContext(null);
 export function UserProvider({ children }) {
     const [token, setToken] = useState(localStorage.getItem("token"));
     const [matchs, setMatchs] = useState([])
-    const [username, setUsername] = useState(localStorage.getItem("username"))
+    const [username, setUsername] = useState("")
     const [id, setId] = useState("")
     const { navigate } = useGlobalNavigate();
 
@@ -16,6 +16,9 @@ export function UserProvider({ children }) {
     useEffect(() => {
         if (token) {
             getMatches()
+            const jwt = decodeJWT(token)
+            setUsername(jwt.username)
+            setId(jwt._id)
         }
     }, [token]);
 
@@ -32,10 +35,6 @@ export function UserProvider({ children }) {
             .then((res) => {
                 setToken(res.token)
                 localStorage.setItem("token", res.token);
-                const jwt = decodeJWT(res.token)
-                setUsername(jwt.username)
-                localStorage.setItem("username", jwt.username);
-                setId(jwt._id)
                 navigate("/user")
             })
             .catch(() => setError("L'identifiant ou le mot de passe est incorrecte"))
