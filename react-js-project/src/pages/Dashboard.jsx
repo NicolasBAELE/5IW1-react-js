@@ -3,7 +3,12 @@ import { useUser } from "../contexts/UserContext";
 import { theme } from "../utils/theme";
 
 export function Dashboard() {
-    const { matchs, username } = useUser();
+    const { matchs, username, getMatches } = useUser();
+
+    useEffect(() => {
+        getMatches()
+    }, [])
+
     const winCount = matchs.filter(match => match.winner?.username === username).length;
     const lossCount = matchs.filter(match => match.winner?.username !== username && match.winner).length;
     const drawCount = matchs.filter(match => match.winner === null).length;
