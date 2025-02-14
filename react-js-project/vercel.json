@@ -1,9 +1,0 @@
-{
-    "rewrites": [
-      {
-        "source": "/api-proxy",
-        "destination": "http://fauques.freeboxos.fr:3000"
-      }
-    ]
-  }
-  
