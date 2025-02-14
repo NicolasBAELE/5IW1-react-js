@@ -6,5 +6,5 @@ export const theme = {
     textColor: "#333",
 };
 
-const LOCAL = true
+const LOCAL = false
 export const BASE_URL = LOCAL ? "http://localhost:3002" : "http://fauques.freeboxos.fr:3000"
