@@ -7,4 +7,4 @@ export const theme = {
 };
 
 const LOCAL = false
-export const BASE_URL = LOCAL ? "http://localhost:3002" : "http://fauques.freeboxos.fr:3000"
+export const BASE_URL = LOCAL ? "http://localhost:3002" : "https://fauques.freeboxos.fr:3000"
