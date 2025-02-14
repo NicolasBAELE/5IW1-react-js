@@ -4,6 +4,7 @@ import { Login } from "./pages/Login";
 import { User } from "./pages/User";
 import { Matchs } from "./pages/Matchs";
 import { NavigationProvider } from "./contexts/NavigationProvider";
+import { Navigate } from "react-router-dom";
 import { UserProvider } from './contexts/UserContext'
 import RouteProtection from "./components/RouteProtection";
 import { Dashboard } from "./pages/Dashboard";
@@ -20,6 +21,7 @@ export default function App() {
             <Route path="/matchs" element={<RouteProtection><Matchs /></RouteProtection>} />
             <Route path="/matchs/:id" element={<RouteProtection><Match /></RouteProtection>} />
             <Route path="/dashboard" element={<RouteProtection><Dashboard /></RouteProtection>} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </UserProvider>
       </NavigationProvider>
